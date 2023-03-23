@@ -6,7 +6,7 @@ import pic from 'src/public/images/20687.png'
 export default function Home(){
     const [title, setTitle] = useState('Hola mundo anime :3');
     useEffect(() => {
-        setTitle("Digital Financier");
+        setTitle("Digital Financiero");
     },[])
     return (
         <>
