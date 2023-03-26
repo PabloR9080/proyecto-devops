@@ -2,6 +2,7 @@
 import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { signIn } from "next-auth/react";
 
 const registerContent = {
   linkUrl: "/signin",
@@ -22,6 +23,7 @@ const signinContent = {
 const initial = { email: "", password: "", name: "" };
 
 const AuthForm = ({ mode }: { mode: "register" | "signin" }) => {
+  const [displayError, setDisplayError] = useState(false);
   const [formState, setFormState] = useState({ ...initial });
   const [error, setError] = useState("");
 
@@ -46,29 +48,19 @@ const AuthForm = ({ mode }: { mode: "register" | "signin" }) => {
           router.push("/signin");
         }
       } else {
+        signIn("credentials", {
+          email: formState.email,
+          password: formState.password,
+          callbackUrl: "/",
+        });
       }
-    } catch (error) {}
+    } catch (e) {
+      setError(`Could not ${mode}`);
+    } finally {
+      setFormState({ ...initial });
+      setDisplayError(true);
+    }
   };
-  //   const handleSubmit = useCallback(
-  //     async (e) => {
-  //       e.preventDefault();
-
-  //       try {
-  //         if (mode === "register") {
-  //           await register(formState);
-  //         } else {
-  //           await signin(formState);
-  //         }
-
-  //         router.replace("/home");
-  //       } catch (e) {
-  //         setError(`Could not ${mode}`);
-  //       } finally {
-  //         setFormState({ ...initial });
-  //       }
-  //     },
-  //     [formState.email, formState.password, formState.name]
-  //   );
 
   const content = mode === "register" ? registerContent : signinContent;
 
@@ -151,6 +143,14 @@ const AuthForm = ({ mode }: { mode: "register" | "signin" }) => {
                 />
               </div>
             </div>
+
+            {displayError && (
+              <div className="flex items-center justify-center">
+                <div className="text-sm text-red-500">
+                  That email already exists!
+                </div>
+              </div>
+            )}
 
             <div className="flex items-center justify-between">
               <div className="text-sm">
