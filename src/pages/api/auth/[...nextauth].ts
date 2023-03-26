@@ -1,5 +1,7 @@
+import { compare } from "bcrypt";
 import NextAuth, { type NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { db } from "../../../lib/db";
 
 export const authOptions: NextAuthOptions = {
   session: {
@@ -7,9 +9,7 @@ export const authOptions: NextAuthOptions = {
   },
   providers: [
     CredentialsProvider({
-      id: "credentials",
-      name: "Credentials",
-      type: "credentials",
+      name: "Sign in",
       credentials: {
         email: {
           label: "Email",
@@ -19,14 +19,40 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        const user = { id: 1, name: "John Doe", email: "john.doe@example.com" };
-        return user;
+        if (!credentials?.email || !credentials.password) {
+          return null;
+        }
+
+        const user = await db.user.findUnique({
+          where: {
+            email: credentials.email,
+          },
+        });
+
+        if (!user) return null;
+
+        const isPasswordValid = await compare(
+          credentials.password,
+          user.password
+        );
+
+        if (!isPasswordValid) return null;
+
+        return {
+          id: user.id + "",
+          email: user.email,
+          name: user.name,
+        };
       },
     }),
   ],
-  // pages: {
-  //   signIn: "/signin",
-  // },
+  pages: {
+    signIn: "/signin",
+  },
+  callbacks: {
+    session: () => {},
+    jwt: ({ token, user }) => {},
+  },
 };
 
 const handler = NextAuth(authOptions);
