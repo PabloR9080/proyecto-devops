@@ -7,7 +7,7 @@ import React, { useState, useEffect } from "react";
 import { Providers } from "../pages/providers";
 import { signOut } from "next-auth/react";
 
-const Layout = ({ children }: any) => {
+export default function Layout({ children }: any) {
   const [title, setTitle] = useState("Hola mundo anime :3");
   useEffect(() => {
     setTitle("Digital Financiero");
@@ -63,6 +63,4 @@ const Layout = ({ children }: any) => {
       </main>
     </div>
   );
-};
-
-export default Layout;
+}

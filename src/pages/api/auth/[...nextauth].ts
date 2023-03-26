@@ -1,3 +1,4 @@
+import { User } from "@prisma/client";
 import { compare } from "bcrypt";
 import NextAuth, { type NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -42,6 +43,7 @@ export const authOptions: NextAuthOptions = {
           id: user.id + "",
           email: user.email,
           name: user.name,
+          // randomKey: "hi",
         };
       },
     }),
@@ -50,8 +52,30 @@ export const authOptions: NextAuthOptions = {
     signIn: "/signin",
   },
   callbacks: {
-    session: () => {},
-    jwt: ({ token, user }) => {},
+    session: ({ session, token }) => {
+      console.log({ session, token });
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          id: token.id,
+          // randomKey: token.randomKey,
+        },
+      };
+    },
+    jwt: ({ token, user }) => {
+      console.log({ token, user });
+      if (user) {
+        const u = user as unknown as User;
+        return {
+          ...token,
+          id: user.id,
+          // sale error en la línea de abajo porque el user no tiene randomKey en el schema
+          // randomKey: user.randomKey,
+        };
+      }
+      return token;
+    },
   },
 };
 
