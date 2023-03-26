@@ -26,8 +26,28 @@ const AuthForm = ({ mode }: { mode: "register" | "signin" }) => {
   const [error, setError] = useState("");
 
   const router = useRouter();
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    try {
+      if (mode === "register") {
+        const res = await fetch("/api/register/register", {
+          method: "POST",
+          body: JSON.stringify({
+            email: formState.email,
+            password: formState.password,
+            name: formState.name,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        if (res.ok) {
+          router.push("/signin");
+        }
+      } else {
+      }
+    } catch (error) {}
   };
   //   const handleSubmit = useCallback(
   //     async (e) => {
