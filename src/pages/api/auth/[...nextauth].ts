@@ -59,6 +59,9 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
+  pages: {
+    signIn: "/login",
+  },
   // no es necesario pero se puede utilizar para acceder a la sesión y tokens más fácil
   callbacks: {
     session: ({ session, token }) => {
