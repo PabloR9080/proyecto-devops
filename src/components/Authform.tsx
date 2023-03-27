@@ -54,9 +54,7 @@ const AuthForm = ({ mode }: { mode: "register" | "signin" }) => {
           password: formState.password,
           callbackUrl: "/",
         });
-        if (error) {
-          setDisplayError(true);
-        } else {
+        if (!error) {
           router.push("/");
         }
       }
