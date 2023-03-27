@@ -45,7 +45,7 @@ export default function Layout({ children }: any) {
                 Login
               </Link>
               <button
-                onClick={() => signOut({ callbackUrl: "/login" })}
+                onClick={() => signOut()}
                 className="px-3 py-2 rounded-md text-sm font-medium text-gray-500 hover:text-gray-700"
               >
                 Sign Out
