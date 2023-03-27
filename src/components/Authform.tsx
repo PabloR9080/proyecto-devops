@@ -5,7 +5,7 @@ import Link from "next/link";
 import { signIn } from "next-auth/react";
 
 const registerContent = {
-  linkUrl: "/signin",
+  linkUrl: "/login",
   linkText: "Already have an account?",
   header: "Create a new Account",
   subheader: "Just a few things to get started",
@@ -45,7 +45,7 @@ const AuthForm = ({ mode }: { mode: "register" | "signin" }) => {
           },
         });
         if (res.ok) {
-          router.push("/signin");
+          router.push("/login");
         }
       } else {
         signIn("credentials", {

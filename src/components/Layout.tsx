@@ -40,12 +40,12 @@ export default function Layout({ children }: any) {
             <div className="hidden sm:ml-6 sm:flex sm:items-center">
               <Link
                 className="px-3 py-2 rounded-md text-sm font-medium text-gray-500 hover:text-gray-700"
-                href="/signin"
+                href="/login"
               >
                 Login
               </Link>
               <button
-                onClick={() => signOut()}
+                onClick={() => signOut({ callbackUrl: "/login" })}
                 className="px-3 py-2 rounded-md text-sm font-medium text-gray-500 hover:text-gray-700"
               >
                 Sign Out

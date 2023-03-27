@@ -1,4 +1,4 @@
-import { User } from "@prisma/client";
+import { User, Prisma } from "@prisma/client";
 import { compare } from "bcrypt";
 import NextAuth, { type NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -10,7 +10,9 @@ export const authOptions: NextAuthOptions = {
   },
   providers: [
     CredentialsProvider({
-      name: "Sign in",
+      id: "credentials",
+      name: "credentials",
+      type: "credentials",
       credentials: {
         email: {
           label: "Email",
@@ -39,6 +41,15 @@ export const authOptions: NextAuthOptions = {
 
         if (!isPasswordValid) return null;
 
+        await db.user.update({
+          where: {
+            email: credentials.email,
+          },
+          data: {
+            lastLoginDate: new Date(),
+          } as Prisma.UserUpdateInput,
+        });
+
         return {
           id: user.id + "",
           email: user.email,
@@ -48,6 +59,7 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
+  // no es necesario pero se puede utilizar para acceder a la sesión y tokens más fácil
   callbacks: {
     session: ({ session, token }) => {
       // console.log({ session, token });
@@ -78,5 +90,3 @@ export const authOptions: NextAuthOptions = {
 
 const handler = NextAuth(authOptions);
 export default handler;
-// hay error con la sig linea
-// export { handler as GET, handler as POST };

@@ -1,7 +1,7 @@
 import AuthForm from "../../components/Authform";
 import Layout from "../../components/Layout";
 
-export default function Signin() {
+export default function Login() {
   return (
     <Layout>
       <AuthForm mode="signin"></AuthForm>
