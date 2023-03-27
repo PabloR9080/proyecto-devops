@@ -17,6 +17,6 @@ model User {
   email         String    @unique
   password      String
   createdAt     DateTime  @default(now()) @map(name: "created_at")
-  updatedAt     DateTime  @updatedAt @map(name: "updated_at")
+  lastLoginDate DateTime? @db.Timestamp(0) @map(name: "last_login_date")
   @@map(name: "users")
 }
