@@ -33,7 +33,7 @@ const AuthForm = ({ mode }: { mode: "register" | "signin" }) => {
 
     try {
       if (mode === "register") {
-        const res = await fetch("/api/register", {
+        const res = await fetch("/api/register/register", {
           method: "POST",
           body: JSON.stringify({
             email: formState.email,
@@ -44,10 +44,6 @@ const AuthForm = ({ mode }: { mode: "register" | "signin" }) => {
             "Content-Type": "application/json",
           },
         });
-        console.log("status text:", res.statusText);
-        console.log("status:", res.status);
-        console.log("ok:", res.ok);
-
         if (res.ok) {
           router.push("/login");
         }
