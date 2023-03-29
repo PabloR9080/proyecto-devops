@@ -11,5 +11,5 @@ export default withAuth({
 });
 
 // proteger rutas
-export const config = { matcher: ["/"] };
+export const config = { matcher: ["/", "/api/users/:path*", "/api/hello"] };
 // export const config = { matcher: ["/pages/:path"] };
