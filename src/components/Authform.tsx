@@ -33,7 +33,7 @@ const AuthForm = ({ mode }: { mode: "register" | "signin" }) => {
 
     try {
       if (mode === "register") {
-        const res = await fetch("/api/register/register", {
+        const res = await fetch("/api/register", {
           method: "POST",
           body: JSON.stringify({
             email: formState.email,
