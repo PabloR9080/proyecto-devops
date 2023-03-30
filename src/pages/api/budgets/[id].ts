@@ -30,7 +30,7 @@ export default async function handler(
         res.status(500).json({ message: "Error retrieving budget" });
       }
       break;
-    // Edit card
+    // Edit budget
     case "PUT":
       const { name, description, amountLeft, endDate } = req.body;
 
@@ -39,6 +39,20 @@ export default async function handler(
         data: { name, description, amountLeft, endDate },
       });
       res.json(updatedBudget);
+      break;
+    // Delete budget
+    case "DELETE":
+      if (id) {
+        const budget = await db.budget.delete({ where: { id: id as string } });
+
+        if (budget) {
+          res.status(204).end();
+        } else {
+          res.status(404).json({ message: "Budget not found" });
+        }
+      } else {
+        res.status(400).json({ message: "ID required" });
+      }
       break;
     default:
       res.status(405).json({ message: "Method not allowed" });
