@@ -6,5 +6,5 @@ export default interface Account{
     balance: number;
     createDate: string;
     lastUpdateDate: string;
-    cards: Card[];
+    cards?: Card[];
 }
