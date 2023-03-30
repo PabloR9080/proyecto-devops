@@ -20,3 +20,14 @@ model User {
   lastLoginDate DateTime? @db.Timestamp(0) @map(name: "last_login_date")
   @@map(name: "users")
 }
+
+model Card {
+  id            String    @id @default(uuid())
+  type          String
+  bankName      String
+  number        String    @unique
+  expiryDate    DateTime
+  createdAt     DateTime  @default(now()) @map(name: "created_at")
+  updatedAt     DateTime  @updatedAt      @map(name: "updated_at")
+  @@map(name: "cards")
+}
