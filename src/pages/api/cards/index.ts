@@ -23,6 +23,16 @@ export default async function handler(
 
     res.status(201).json(newCard);
   }
+  // Get cards
+  else if (req.method === "GET") {
+    const card = await db.card.findUnique({ where: { id: id as string } });
+
+    if (card) {
+      res.json(card);
+    } else {
+      res.status(404).json({ message: "Card not found" });
+    }
+  }
   // Edit Card
   else if (req.method === "PUT") {
     const { type, bankName, number, expiryDate } = req.body;
