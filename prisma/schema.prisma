@@ -23,15 +23,16 @@ model User {
 }
 
 model Card {
-  id         String   @id @default(uuid())
-  type       String
-  bankName   String   @map(name: "bank_name")
-  number     String   @unique
-  expiryDate String   @map(name: "expiry_date")
-  createdAt  DateTime @default(now()) @map(name: "created_at")
-  updatedAt  DateTime @updatedAt @map(name: "updated_at")
-  Account    Account? @relation(fields: [accountId], references: [id])
-  accountId  String?  @map(name: "account_id")
+  id          String        @id @default(uuid())
+  type        String
+  bankName    String        @map(name: "bank_name")
+  number      String        @unique
+  expiryDate  String        @map(name: "expiry_date")
+  createdAt   DateTime      @default(now()) @map(name: "created_at")
+  updatedAt   DateTime      @updatedAt @map(name: "updated_at")
+  Account     Account?      @relation(fields: [accountId], references: [id])
+  accountId   String?       @map(name: "account_id")
+  Transaction Transaction[]
 
   @@map(name: "cards")
 }
@@ -55,8 +56,18 @@ model Budget {
   amountLeft  Decimal?  @map(name: "amount_left")
   startDate   DateTime  @map(name: "start_date")
   endDate     DateTime? @map(name: "end_date")
-  createdAt   DateTime @default(now()) @map(name: "created_at")
-  updatedAt   DateTime @updatedAt @map(name: "updated_at")
+  createdAt   DateTime  @default(now()) @map(name: "created_at")
+  updatedAt   DateTime  @updatedAt @map(name: "updated_at")
 
   @@map(name: "budgets")
+}
+
+model Transaction {
+  id          String  @id @default(uuid())
+  type        String
+  amount      Decimal
+  description String?
+  Card        Card?   @relation(fields: [cardOrigin], references: [id])
+  cardOrigin  String? @map(name: "card_origin")
+  transactionDate DateTime @default(now()) @map(name: "transaction_date")
 }
