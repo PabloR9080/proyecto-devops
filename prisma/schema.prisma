@@ -17,6 +17,32 @@ model User {
   email         String    @unique
   password      String
   createdAt     DateTime  @default(now()) @map(name: "created_at")
-  lastLoginDate DateTime? @db.Timestamp(0) @map(name: "last_login_date")
+  lastLoginDate DateTime? @map(name: "last_login_date") @db.Timestamp(0)
+
   @@map(name: "users")
+}
+
+model Card {
+  id         String   @id @default(uuid())
+  type       String
+  bankName   String
+  number     String   @unique
+  expiryDate String
+  createdAt  DateTime @default(now()) @map(name: "created_at")
+  updatedAt  DateTime @updatedAt @map(name: "updated_at")
+  Account    Account? @relation(fields: [accountId], references: [id])
+  accountId  String?
+
+  @@map(name: "cards")
+}
+
+model Account {
+  id            String    @id @default(uuid())
+  name          String
+  balance       Float
+  createDate    DateTime  @default(now()) @map(name: "create_date")
+  lastLoginDate DateTime? @map(name: "last_login_date") @db.Timestamp(0)
+  cards         Card[]
+
+  @@map(name: "accounts")
 }
