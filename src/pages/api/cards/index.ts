@@ -8,10 +8,12 @@ export default async function handler(
   const { method } = req;
 
   switch (method) {
+    // Get all cards
     case "GET":
       const cards = await db.card.findMany();
       res.json(cards);
       break;
+    // Create card
     case "POST":
       const { type, bankName, number, expiryDate, accountId } = req.body;
       const newCard = await db.card.create({
