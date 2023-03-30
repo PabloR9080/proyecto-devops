@@ -25,13 +25,13 @@ model User {
 model Card {
   id         String   @id @default(uuid())
   type       String
-  bankName   String
+  bankName   String   @map(name: "bank_name")
   number     String   @unique
-  expiryDate String
+  expiryDate String   @map(name: "expiry_date")
   createdAt  DateTime @default(now()) @map(name: "created_at")
   updatedAt  DateTime @updatedAt @map(name: "updated_at")
   Account    Account? @relation(fields: [accountId], references: [id])
-  accountId  String?
+  accountId  String?  @map(name: "account_id")
 
   @@map(name: "cards")
 }
@@ -45,4 +45,18 @@ model Account {
   cards         Card[]
 
   @@map(name: "accounts")
+}
+
+model Budget {
+  id          String    @id @default(uuid())
+  name        String
+  description String?
+  amount      Decimal
+  amountLeft  Decimal?  @map(name: "amount_left")
+  startDate   DateTime  @map(name: "start_date")
+  endDate     DateTime? @map(name: "end_date")
+  createdAt   DateTime @default(now()) @map(name: "created_at")
+  updatedAt   DateTime @updatedAt @map(name: "updated_at")
+
+  @@map(name: "budgets")
 }

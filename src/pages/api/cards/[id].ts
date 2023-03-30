@@ -1,7 +1,7 @@
 import { db } from "../../../lib/db";
 import { NextApiRequest, NextApiResponse } from "next";
 
-// Get Card by id, Edit Card, Delete Card
+// Get Card by Id, Edit Card, Delete Card
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
