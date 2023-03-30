@@ -27,7 +27,7 @@ model Card {
   type       String
   bankName   String
   number     String   @unique
-  expiryDate DateTime
+  expiryDate String
   createdAt  DateTime @default(now()) @map(name: "created_at")
   updatedAt  DateTime @updatedAt @map(name: "updated_at")
   Account    Account? @relation(fields: [accountId], references: [id])
