@@ -30,6 +30,16 @@ export default async function handler(
         res.status(500).json({ message: "Error retrieving budget" });
       }
       break;
+    // Edit card
+    case "PUT":
+      const { name, description, amountLeft, endDate } = req.body;
+
+      const updatedBudget = await db.budget.update({
+        where: { id: id as string },
+        data: { name, description, amountLeft, endDate },
+      });
+      res.json(updatedBudget);
+      break;
     default:
       res.status(405).json({ message: "Method not allowed" });
   }
