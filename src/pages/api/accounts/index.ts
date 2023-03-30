@@ -15,7 +15,7 @@ export default async function handler(
       break;
     // Create account
     case "POST":
-      const { name, balance, createDate, lastLoginDate, cards, accountId } =
+      const { name, balance, createDate, lastLoginDate, cards, userId } =
         req.body;
       const newAccount = await db.account.create({
         data: {
@@ -24,7 +24,7 @@ export default async function handler(
           createDate: undefined,
           lastLoginDate,
           cards: undefined,
-          accountId,
+          userId,
         },
       });
       res.status(201).json(newAccount);
