@@ -49,6 +49,20 @@ export default async function handler(
     });
 
     res.json(updatedCard);
+  }
+  // Delete card
+  else if (req.method === "DELETE") {
+    if (id) {
+      const card = await db.card.delete({ where: { id: id as string } });
+
+      if (card) {
+        res.status(204).end();
+      } else {
+        res.status(404).json({ message: "Card not found" });
+      }
+    } else {
+      res.status(400).json({ message: "ID required" });
+    }
   } else {
     res.status(405).json({ message: "Method not allowed" });
   }
