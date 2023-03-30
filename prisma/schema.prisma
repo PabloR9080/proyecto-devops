@@ -39,7 +39,7 @@ model Card {
 model Account {
   id            String    @id @default(uuid())
   name          String
-  balance       Float
+  balance       Decimal
   createDate    DateTime  @default(now()) @map(name: "create_date")
   lastLoginDate DateTime? @map(name: "last_login_date") @db.Timestamp(0)
   cards         Card[]
