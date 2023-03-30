@@ -22,6 +22,17 @@ export default async function handler(
     });
 
     res.status(201).json(newCard);
+  }
+  // Edit Card
+  else if (req.method === "PUT") {
+    const { type, bankName, number, expiryDate } = req.body;
+
+    const updatedCard = await db.card.update({
+      where: { id: id as string },
+      data: { type, bankName, number, expiryDate },
+    });
+
+    res.json(updatedCard);
   } else {
     res.status(405).json({ message: "Method not allowed" });
   }
