@@ -3,7 +3,7 @@ export default interface Card {
   type: string;
   bankName: string;
   number: string;
-  expirationDate: string;
+  expiryDate: string;
   createdDate: string;
   updatedDate: string;
 }
