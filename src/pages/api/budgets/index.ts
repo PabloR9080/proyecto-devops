@@ -13,6 +13,22 @@ export default async function handler(
       const budgets = await db.budget.findMany();
       res.json(budgets);
       break;
+    // Create budget
+    case "POST":
+      const { name, description, amount, amountLeft, startDate, endDate } =
+        req.body;
+      const newBudget = await db.budget.create({
+        data: {
+          name,
+          description,
+          amount,
+          amountLeft,
+          startDate,
+          endDate,
+        },
+      });
+      res.status(201).json(newBudget);
+      break;
     default:
       res.status(405).json({ message: "Method not allowed" });
   }
