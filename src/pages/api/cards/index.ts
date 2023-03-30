@@ -23,14 +23,20 @@ export default async function handler(
 
     res.status(201).json(newCard);
   }
-  // Get cards
+  // Get all cards or by id
   else if (req.method === "GET") {
-    const card = await db.card.findUnique({ where: { id: id as string } });
+    if (id) {
+      const card = await db.card.findUnique({ where: { id: id as string } });
 
-    if (card) {
-      res.json(card);
+      if (card) {
+        res.json(card);
+      } else {
+        res.status(404).json({ message: "Card not found" });
+      }
     } else {
-      res.status(404).json({ message: "Card not found" });
+      const cards = await db.card.findMany();
+
+      res.json(cards);
     }
   }
   // Edit Card
