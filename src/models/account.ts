@@ -1,7 +1,7 @@
 import Card from "./card";
 
 export default interface Account{
-    id: number;
+    id: string;
     name: string;
     balance: number;
     createDate: string;
