@@ -18,6 +18,7 @@ model User {
   password      String
   createdAt     DateTime  @default(now()) @map(name: "created_at")
   lastLoginDate DateTime? @map(name: "last_login_date") @db.Timestamp(0)
+  accounts      Account[]
 
   @@map(name: "users")
 }
@@ -44,6 +45,8 @@ model Account {
   createDate    DateTime  @default(now()) @map(name: "create_date")
   lastLoginDate DateTime? @map(name: "last_login_date") @db.Timestamp(0)
   cards         Card[]
+  User          User?     @relation(fields: [userId], references: [id])
+  userId        String?
 
   @@map(name: "accounts")
 }
