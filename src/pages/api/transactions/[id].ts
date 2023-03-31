@@ -25,7 +25,7 @@ export default async function handler(
 
         res.status(200).json(transaction);
       } catch (error) {
-        res.status(500).json({ message: "Error retrieving card" });
+        res.status(500).json({ message: "Error retrieving transaction" });
       }
       break;
     // Edit transaction
