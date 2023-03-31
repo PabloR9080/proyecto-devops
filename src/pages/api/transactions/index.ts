@@ -10,23 +10,31 @@ export default async function handler(
   switch (method) {
     // Get all transactions
     case "GET":
-      const transactions = await db.transaction.findMany();
-      res.json(transactions);
+      try {
+        const transactions = await db.transaction.findMany();
+        res.json(transactions);
+      } catch (error) {
+        res.status(500).json({ message: "Error retrieving accounts" });
+      }
       break;
     // Create transaction
     case "POST":
-      const { type, amount, description, cardOrigin, transactionDate } = req.body;
+      try {
+        const { type, amount, description, cardOrigin, transactionDate } = req.body;
 
-      const newTransaction = await db.transaction.create({
-        data: {
-          type,
-          amount,
-          description,
-          cardOrigin,
-          transactionDate,
-        },
-      });
-      res.status(201).json(newTransaction);
+        const newTransaction = await db.transaction.create({
+          data: {
+            type,
+            amount,
+            description,
+            cardOrigin,
+            transactionDate,
+          },
+        });
+        res.status(201).json(newTransaction);
+      } catch (error){
+        res.status(500).json({ message: "Error creating account" });
+      }
       break;
     default:
       res.status(405).json({ message: "Method not allowed" });
