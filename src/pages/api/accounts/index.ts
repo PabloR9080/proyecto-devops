@@ -10,24 +10,32 @@ export default async function handler(
   switch (method) {
     // Get all accounts
     case "GET":
-      const accounts = await db.account.findMany();
-      res.json(accounts);
+      try {
+        const accounts = await db.account.findMany();
+        res.json(accounts);
+      } catch (error) {
+        res.status(500).json({ message: "Error retrieving accounts" });
+      }
       break;
     // Create account
     case "POST":
-      const { name, balance, createDate, lastLoginDate, cards, userId } =
-        req.body;
-      const newAccount = await db.account.create({
-        data: {
-          name,
-          balance,
-          createDate: undefined,
-          lastLoginDate,
-          cards: undefined,
-          userId,
-        },
-      });
-      res.status(201).json(newAccount);
+      try {
+        const { name, balance, createDate, lastLoginDate, cards, userId } =
+          req.body;
+        const newAccount = await db.account.create({
+          data: {
+            name,
+            balance,
+            createDate: undefined,
+            lastLoginDate,
+            cards: undefined,
+            userId,
+          },
+        });
+        res.status(201).json(newAccount);
+      } catch (error){
+          res.status(500).json({ message: "Error creating account" });
+      }
       break;
     default:
       res.status(405).json({ message: "Method not allowed" });
