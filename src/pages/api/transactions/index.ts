@@ -14,7 +14,7 @@ export default async function handler(
         const transactions = await db.transaction.findMany();
         res.json(transactions);
       } catch (error) {
-        res.status(500).json({ message: "Error retrieving accounts" });
+        res.status(500).json({ message: "Error retrieving transactions" });
       }
       break;
     // Create transaction
@@ -33,7 +33,7 @@ export default async function handler(
         });
         res.status(201).json(newTransaction);
       } catch (error){
-        res.status(500).json({ message: "Error creating account" });
+        res.status(500).json({ message: "Error creating transactions" });
       }
       break;
     default:

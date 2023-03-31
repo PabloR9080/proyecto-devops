@@ -34,8 +34,20 @@ describe("handler", () => {
   describe("GET method", () => {
     it("should return all transactions", async () => {
       const transactions = [
-        { id: "1", name: "Account 1" },
-        { id: "2", name: "Account 2" },
+        {
+          id: "1",
+          type: "income",
+          amount: 100,
+          cardsOrigin: "1234",
+          transactionDate: "2023-03-31T00:11:28.939Z",
+        },
+        {
+          id: "2",
+          type: "income",
+          amount: 100,
+          cardsOrigin: "1234",
+          transactionDate: "2023-03-31T00:11:28.939Z",
+        },
       ];
       db.transaction.findMany.mockResolvedValueOnce(transactions);
 
@@ -53,7 +65,7 @@ describe("handler", () => {
       expect(db.transaction.findMany).toHaveBeenCalled();
       expect(res.status).toHaveBeenCalledWith(500);
       expect(res.json).toHaveBeenCalledWith({
-        message: "Error retrieving accounts",
+        message: "Error retrieving transactions",
       });
     });
   });
@@ -100,7 +112,7 @@ describe("handler", () => {
       expect(db.transaction.create).toHaveBeenCalled();
       expect(res.status).toHaveBeenCalledWith(500);
       expect(res.json).toHaveBeenCalledWith({
-        message: "Error creating account",
+        message: "Error creating transactions",
       });
     });
   });
@@ -121,8 +133,8 @@ describe("handler", () => {
 
 jest.mock("../../lib/db");
 
-describe("GET /api/accounts/[id]", () => {
-  it("should return account data", async () => {
+describe("GET /api/transactions/[id]", () => {
+  it("should return transaction data", async () => {
     const mockTransaction = {
       id: "83a90301-c117-4b49-9ef1-1bccf612e5b0",
       type: "income",
@@ -152,7 +164,7 @@ describe("GET /api/accounts/[id]", () => {
     expect(res.json).toHaveBeenCalledWith(mockTransaction);
   });
 
-  it("should return 404 when account is not found", async () => {
+  it("should return 404 when transaction is not found", async () => {
     const mockFindUnique = jest.fn().mockResolvedValueOnce(null);
     db.transaction.findUnique = mockFindUnique;
 
@@ -175,7 +187,7 @@ describe("GET /api/accounts/[id]", () => {
   });
 });
 
-describe("PUT /api/accounts/[id]", () => {
+describe("PUT /api/transactions/[id]", () => {
   it("should update transaction data", async () => {
     const mockUpdatedTransaction = {
       id: "83a90301-c117-4b49-9ef1-1bccf612e5b0",
