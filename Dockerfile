@@ -8,6 +8,8 @@ RUN npm install
 
 COPY . /app/
 
+RUN npx prisma generate
+
 EXPOSE 3000
 
 ENTRYPOINT npm run dev
