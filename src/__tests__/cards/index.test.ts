@@ -1,12 +1,12 @@
 import mocked from "next/jest.js";
 import { NextApiRequest, NextApiResponse } from "next";
-import handler from "../../pages/api/transactions/index";
-import handler2 from "../../pages/api/transactions/[id]";
+import handler from "../../pages/api/cards/index";
+import handler2 from "../../pages/api/cards/[id]";
 import { db } from "../../lib/db";
 
 jest.mock("../../lib/db", () => ({
   db: {
-    transaction: {
+    card: {
       findMany: jest.fn(),
       create: jest.fn(),
     },
@@ -32,40 +32,44 @@ describe("handler", () => {
   });
 
   describe("GET method", () => {
-    it("should return all transactions", async () => {
-      const transactions = [
+    it("should return all cards", async () => {
+      const cards = [
         {
-          id: "1",
-          type: "income",
-          amount: 100,
-          cardsOrigin: "1234",
-          transactionDate: "2023-03-31T00:11:28.939Z",
+          id: "83a90301-c117-4b49-9ef1-1bccf612e5b0",
+          type: "debit",
+          bankName: "Santander",
+          number: "3424354365783421",
+          expiryDate: "2024-03",
+          createdDate: new Date(),
+          updatedDate: new Date(),
         },
         {
-          id: "2",
-          type: "income",
-          amount: 100,
-          cardsOrigin: "1234",
-          transactionDate: "2023-03-31T00:11:28.939Z",
+          id: "01a20302-c547-4b49-9ef1-1bccf612e5b0",
+          type: "credit",
+          bankName: "BBVA",
+          number: "8974354365783421",
+          expiryDate: "2024-03",
+          createdDate: new Date(),
+          updatedDate: new Date(),
         },
       ];
-      db.transaction.findMany.mockResolvedValueOnce(transactions);
+      db.card.findMany.mockResolvedValueOnce(cards);
 
       await handler(req as NextApiRequest, res as NextApiResponse);
 
-      expect(db.transaction.findMany).toHaveBeenCalled();
-      expect(res.json).toHaveBeenCalledWith(transactions);
+      expect(db.card.findMany).toHaveBeenCalled();
+      expect(res.json).toHaveBeenCalledWith(cards);
     });
 
     it("should return 500 if an error occurs", async () => {
-      db.transaction.findMany.mockRejectedValueOnce(new Error());
+      db.card.findMany.mockRejectedValueOnce(new Error());
 
       await handler(req as NextApiRequest, res as NextApiResponse);
 
-      expect(db.transaction.findMany).toHaveBeenCalled();
+      expect(db.card.findMany).toHaveBeenCalled();
       expect(res.status).toHaveBeenCalledWith(500);
       expect(res.json).toHaveBeenCalledWith({
-        message: "Error retrieving transactions",
+        message: "Error retrieving cards",
       });
     });
   });
@@ -74,45 +78,50 @@ describe("handler", () => {
     beforeEach(() => {
       req.method = "POST";
       req.body = {
-        type: "income",
-        amount: 100,
-        cardsOrigin: "1234",
-        transactionDate: "2023-03-31T00:11:28.939Z",
+        id: "83a90301-c117-4b49-9ef1-1bccf612e5b0",
+        type: "debit",
+        bankName: "Santander",
+        number: "3424354365783421",
+        expiryDate: "2024-03",
+        accountId: null,
       };
     });
 
-    it("should create a new transaction", async () => {
-      const newTransaction = {
-        id: "3",
-        type: "income",
-        amount: 100,
+    it("should create a new card", async () => {
+      const newCard = {
+        id: "83a90301-c117-4b49-9ef1-1bccf612e5b0",
+        type: "debit",
+        bankName: "Santander",
+        number: "3424354365783421",
+        expiryDate: "2024-03",
+        accountId: null,
       };
-      db.transaction.create.mockResolvedValueOnce(newTransaction);
+      db.card.create.mockResolvedValueOnce(newCard);
 
       await handler(req as NextApiRequest, res as NextApiResponse);
 
-      expect(db.transaction.create).toHaveBeenCalledWith({
+      expect(db.card.create).toHaveBeenCalledWith({
         data: {
-          type: "income",
-          amount: 100,
-          description: undefined,
-          transactionDate: "2023-03-31T00:11:28.939Z",
-          cardOrigin: undefined,
+          type: "debit",
+          bankName: "Santander",
+          number: "3424354365783421",
+          expiryDate: "2024-03",
+          accountId: null,
         },
       });
       expect(res.status).toHaveBeenCalledWith(201);
-      expect(res.json).toHaveBeenCalledWith(newTransaction);
+      expect(res.json).toHaveBeenCalledWith(newCard);
     });
 
     it("should return 500 if an error occurs", async () => {
-      db.transaction.create.mockRejectedValueOnce(new Error());
+      db.card.create.mockRejectedValueOnce(new Error());
 
       await handler(req as NextApiRequest, res as NextApiResponse);
 
-      expect(db.transaction.create).toHaveBeenCalled();
+      expect(db.card.create).toHaveBeenCalled();
       expect(res.status).toHaveBeenCalledWith(500);
       expect(res.json).toHaveBeenCalledWith({
-        message: "Error creating transactions",
+        message: "Error creating card",
       });
     });
   });
@@ -129,18 +138,19 @@ describe("handler", () => {
   });
 });
 
-describe("GET /api/transactions/[id]", () => {
-  it("should return transaction data", async () => {
-    const mockTransaction = {
+describe("GET /api/cards/[id]", () => {
+  it("should return card data", async () => {
+    const mockCard = {
       id: "83a90301-c117-4b49-9ef1-1bccf612e5b0",
-      type: "income",
-      amount: 100,
-      description: undefined,
-      transactionDate: new Date(),
-      cardOrigin: undefined,
+      type: "debit",
+      bankName: "Santander",
+      number: "3424354365783421",
+      expiryDate: "2024-03",
+      createdDate: new Date(),
+      updatedDate: new Date(),
     };
-    const mockFindUnique = jest.fn().mockResolvedValueOnce(mockTransaction);
-    db.transaction.findUnique = mockFindUnique;
+    const mockFindUnique = jest.fn().mockResolvedValueOnce(mockCard);
+    db.card.findUnique = mockFindUnique;
 
     const req = {
       method: "GET",
@@ -157,12 +167,12 @@ describe("GET /api/transactions/[id]", () => {
       where: { id: "83a90301-c117-4b49-9ef1-1bccf612e5b0" },
     });
     expect(res.status).toHaveBeenCalledWith(200);
-    expect(res.json).toHaveBeenCalledWith(mockTransaction);
+    expect(res.json).toHaveBeenCalledWith(mockCard);
   });
 
-  it("should return 404 when transaction is not found", async () => {
+  it("should return 404 when card is not found", async () => {
     const mockFindUnique = jest.fn().mockResolvedValueOnce(null);
-    db.transaction.findUnique = mockFindUnique;
+    db.card.findUnique = mockFindUnique;
 
     const req = {
       method: "GET",
@@ -179,22 +189,23 @@ describe("GET /api/transactions/[id]", () => {
       where: { id: "83a90301-c117-4b49-9ef1-1bccf612e5b0" },
     });
     expect(res.status).toHaveBeenCalledWith(404);
-    expect(res.json).toHaveBeenCalledWith({ message: "Transaction not found" });
+    expect(res.json).toHaveBeenCalledWith({ message: "Card not found" });
   });
 });
 
-describe("PUT /api/transactions/[id]", () => {
-  it("should update transaction data", async () => {
-    const mockUpdatedTransaction = {
+describe("PUT /api/cards/[id]", () => {
+  it("should update card data", async () => {
+    const mockUpdatedCard = {
       id: "83a90301-c117-4b49-9ef1-1bccf612e5b0",
-      type: "income",
-      amount: 100,
-      description: undefined,
-      transactionDate: new Date(),
-      cardOrigin: undefined,
+      type: "debit",
+      bankName: "Santander",
+      number: "3424354365783421",
+      expiryDate: "2023-03",
+      createdDate: "2023-03-31T00:11:28.939Z",
+      updatedDate: "2023-03-31T00:11:28.939Z",
     };
-    const mockUpdate = jest.fn().mockResolvedValueOnce(mockUpdatedTransaction);
-    db.transaction.update = mockUpdate;
+    const mockUpdate = jest.fn().mockResolvedValueOnce(mockUpdatedCard);
+    db.card.update = mockUpdate;
 
     const req = {
       method: "PUT",
@@ -202,9 +213,10 @@ describe("PUT /api/transactions/[id]", () => {
         id: "83a90301-c117-4b49-9ef1-1bccf612e5b0",
       },
       body: {
-        type: "expense",
-        amount: 200,
-        transactionDate: "2023-03-31T00:11:28.939Z",
+        type: "debit",
+        bankName: "Santander",
+        number: "3424354365783421",
+        expiryDate: "2025-03",
       },
     };
     const res = {
@@ -217,13 +229,12 @@ describe("PUT /api/transactions/[id]", () => {
     expect(mockUpdate).toHaveBeenCalledWith({
       where: { id: "83a90301-c117-4b49-9ef1-1bccf612e5b0" },
       data: {
-        type: "expense",
-        amount: 200,
-        transactionDate: "2023-03-31T00:11:28.939Z",
-        description: undefined,
-        cardOrigin: undefined,
+        type: "debit",
+        bankName: "Santander",
+        number: "3424354365783421",
+        expiryDate: "2025-03",
       },
     });
-    expect(res.json).toHaveBeenCalledWith(mockUpdatedTransaction);
+    expect(res.json).toHaveBeenCalledWith(mockUpdatedCard);
   });
 });
