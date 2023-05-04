@@ -34,8 +34,8 @@ describe("handler", () => {
   describe("GET method", () => {
     it("should return all accounts", async () => {
       const accounts = [
-        { id: "1", name: "Account 1" },
-        { id: "2", name: "Account 2" },
+        { id: "01a20302-c547-4b49-9ef1-1bccf612e5b0", name: "Account 1" },
+        { id: "83a90301-c117-4b49-9ef1-1bccf612e5b0", name: "Account 2" },
       ];
       db.account.findMany.mockResolvedValueOnce(accounts);
 
@@ -73,7 +73,7 @@ describe("handler", () => {
 
     it("should create a new account", async () => {
       const newAccount = {
-        id: "3",
+        id: "83a90301-c117-4b49-9ef1-1bccf612e5b0",
         name: "New account",
         balance: 100,
         userId: "1",
@@ -120,10 +120,6 @@ describe("handler", () => {
     });
   });
 });
-
-//ibsjkdjlsnd el otro
-
-jest.mock("../../lib/db");
 
 describe("GET /api/accounts/[id]", () => {
   it("should return account data", async () => {

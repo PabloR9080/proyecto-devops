@@ -35,7 +35,7 @@ describe("handler", () => {
     it("should return all budgets", async () => {
       const budgets = [
         {
-          id: "1",
+          id: "83a90301-c117-4b49-9ef1-1bccf612e5b0",
           name: "June",
           description: "june",
           amount: 2000,
@@ -44,7 +44,7 @@ describe("handler", () => {
           endDate: "2023-03-31T00:11:28.939Z",
         },
         {
-          id: "2",
+          id: "01a20302-c547-4b49-9ef1-1bccf612e5b0",
           name: "November",
           description: "november",
           amount: 3000,
@@ -78,7 +78,7 @@ describe("handler", () => {
     beforeEach(() => {
       req.method = "POST";
       req.body = {
-        id: "2",
+          id: "01a20302-c547-4b49-9ef1-1bccf612e5b0",
           name: "November",
           description: "november",
           amount: 3000,
@@ -90,7 +90,7 @@ describe("handler", () => {
 
     it("should create a new budget", async () => {
       const newbudget = {
-        id: "2",
+        id: "01a20302-c547-4b49-9ef1-1bccf612e5b0",
           name: "November",
           description: "november",
           amount: 3000,
@@ -126,7 +126,7 @@ describe("handler", () => {
       expect(db.budget.create).toHaveBeenCalled();
       expect(res.status).toHaveBeenCalledWith(500);
       expect(res.json).toHaveBeenCalledWith({
-        message: "Error creating budgets",
+        message: "Error creating budget",
       });
     });
   });
@@ -142,10 +142,6 @@ describe("handler", () => {
     });
   });
 });
-
-//ibsjkdjlsnd el otro
-
-jest.mock("../../lib/db");
 
 describe("GET /api/budgets/[id]", () => {
   it("should return budget data", async () => {
@@ -203,15 +199,16 @@ describe("GET /api/budgets/[id]", () => {
 
 describe("PUT /api/budgets/[id]", () => {
   it("should update budget data", async () => {
-    const mockUpdatedbudget = {
+    const mockUpdatedBudget = {
       id: "83a90301-c117-4b49-9ef1-1bccf612e5b0",
-      type: "income",
-      amount: 100,
-      description: undefined,
-      budgetDate: new Date(),
-      cardOrigin: undefined,
+      name: "November",
+      description: "november",
+      amount: 3000,
+      amountLeft: 3000,
+      startDate: "2023-03-31T00:11:28.939Z",
+      endDate: "2023-03-31T00:11:28.939Z",
     };
-    const mockUpdate = jest.fn().mockResolvedValueOnce(mockUpdatedbudget);
+    const mockUpdate = jest.fn().mockResolvedValueOnce(mockUpdatedBudget);
     db.budget.update = mockUpdate;
 
     const req = {
@@ -220,9 +217,11 @@ describe("PUT /api/budgets/[id]", () => {
         id: "83a90301-c117-4b49-9ef1-1bccf612e5b0",
       },
       body: {
-        type: "expense",
-        amount: 200,
-        budgetDate: "2023-03-31T00:11:28.939Z",
+        name: "November",
+        description: "november",
+        amount: 3000,
+        amountLeft: 2000,
+        endDate: "2023-05-20T00:11:28.939Z",
       },
     };
     const res = {
@@ -235,13 +234,12 @@ describe("PUT /api/budgets/[id]", () => {
     expect(mockUpdate).toHaveBeenCalledWith({
       where: { id: "83a90301-c117-4b49-9ef1-1bccf612e5b0" },
       data: {
-        type: "expense",
-        amount: 200,
-        budgetDate: "2023-03-31T00:11:28.939Z",
-        description: undefined,
-        cardOrigin: undefined,
+        name: "November",
+        description: "november",
+        amountLeft: 2000,
+        endDate: "2023-05-20T00:11:28.939Z",
       },
     });
-    expect(res.json).toHaveBeenCalledWith(mockUpdatedbudget);
+    expect(res.json).toHaveBeenCalledWith(mockUpdatedBudget);
   });
 });

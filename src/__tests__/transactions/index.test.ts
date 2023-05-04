@@ -129,10 +129,6 @@ describe("handler", () => {
   });
 });
 
-//ibsjkdjlsnd el otro
-
-jest.mock("../../lib/db");
-
 describe("GET /api/transactions/[id]", () => {
   it("should return transaction data", async () => {
     const mockTransaction = {
