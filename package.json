@@ -1,21 +1,25 @@
 {
     "scripts": {
         "build": "next build",
-        "dev": "next dev",
+        "dev": "next dev -p 3000 -H 0.0.0.0",
         "start": "next start",
         "lint": "next lint",
         "test": "jest",
-        "type-check": "tsc --noEmit"
+        "type-check": "tsc --noEmit",
+        "clear": "rm -rf .next"
     },
     "devDependencies": {
-        "@babel/preset-env": "^7.20.2",
-        "@babel/preset-typescript": "^7.21.0",
+        "@babel/core": "^7.21.4",
+        "@babel/preset-env": "^7.21.4",
+        "@babel/preset-react": "^7.18.6",
+        "@babel/preset-typescript": "^7.21.4",
         "@testing-library/jest-dom": "^5.16.5",
         "@testing-library/react": "^14.0.0",
         "@types/bcrypt": "^5.0.0",
         "@types/node": "18.15.5",
         "@types/react": "18.0.28",
         "autoprefixer": "^10.4.14",
+        "babel-jest": "^29.5.0",
         "css-loader": "^6.7.3",
         "eslint": "8.36.0",
         "eslint-config-next": "13.2.4",
