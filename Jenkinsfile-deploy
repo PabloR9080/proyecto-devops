@@ -1,0 +1,19 @@
+pipeline{
+    agent {label 'agent1'}
+    stages{
+        stage('Build image'){
+            steps{
+                sh 'docker stop $(docker ps -a -q)'
+                sh 'docker rm $(docker ps -a -q)'
+                sh 'docker build -t sicei-$GIT_BRANCH:1.0.0-$BUILD_NUMBER .'
+            }
+        }
+        stage('Run container'){
+            steps{
+                sh 'docker run -d -p 3000:3000 sicei-$GIT_BRANCH:1.0.0-$BUILD_NUMBER'
+            }
+        }
+        }
+    }
+
+}

@@ -8,8 +8,8 @@ RUN npm install
 
 COPY . /app/
 
-RUN npx prisma generate
+RUN npx prisma generate && npm run build
 
 EXPOSE 3000
 
-ENTRYPOINT npm run dev
+ENTRYPOINT npm run start

@@ -1,0 +1,16 @@
+pipeline{
+    agent {label 'agent1'}
+    stages{
+        stage('Test'){
+            steps{
+                npm 'install'
+                sh 'npm run test'
+            }
+        }
+        stage('Build'){
+            steps{
+                sh 'npm run build'
+            }
+        }
+    }
+}
