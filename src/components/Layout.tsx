@@ -2,7 +2,7 @@ import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
 import pic from "../public/images/20687.png";
-import Greeting from "../components/Greeting";
+//import Greeting from "../components/Greeting";
 import React, { useState, useEffect } from "react";
 import { signOut, useSession } from "next-auth/react";
 
