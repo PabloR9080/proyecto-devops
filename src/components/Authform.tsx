@@ -48,11 +48,15 @@ const AuthForm = ({ mode }: { mode: "register" | "signin" }) => {
           router.push("/signin");
         }
       } else {
-        signIn("credentials", {
+        const response = await signIn("credentials", {
+          redirect: false,
           email: formState.email,
           password: formState.password,
           callbackUrl: "/",
         });
+        if (!response?.error) {
+          router.push("/");
+        }
       }
     } catch (e) {
       setError(`Could not ${mode}`);
