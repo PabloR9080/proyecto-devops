@@ -48,15 +48,15 @@ const AuthForm = ({ mode }: { mode: "register" | "signin" }) => {
           router.push("/login");
         }
       } else {
-       // const { error } = await signIn("credentials", {
-       // redirect: false,
-       //   email: formState.email,
-       //   password: formState.password,
-       //   callbackUrl: "/",
-       // });
-       // if (!error) {
-       //   router.push("/");
-       // }
+        const response = await signIn("credentials", {
+          redirect: false,
+          email: formState.email,
+          password: formState.password,
+          callbackUrl: "/",
+        });
+        if (!response?.error) {
+          router.push("/");
+        }
       }
       setDisplayError(false);
     } catch (e) {
