@@ -6,7 +6,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<User>)
     const { searchParams } = new URL(req.url || '', API)
     const name = searchParams.get('name') || 'Test'
     const response = {
-        id: 1,
+        id: "1",
         name: name,
         email: 'exaple@example.com',
         password: '1234',

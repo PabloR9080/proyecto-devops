@@ -1,11 +1,13 @@
 import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
-import pic from "src/public/images/20687.png";
-import Greeting from "../components/Greeting";
+import pic from "../public/images/20687.png";
+//import Greeting from "../components/Greeting";
 import React, { useState, useEffect } from "react";
+import { signOut, useSession } from "next-auth/react";
 
-const Layout = ({ children }) => {
+export default function Layout({ children }: any) {
+  const { data: session } = useSession();
   const [title, setTitle] = useState("Hola mundo anime :3");
   useEffect(() => {
     setTitle("Digital Financiero");
@@ -36,12 +38,19 @@ const Layout = ({ children }) => {
               </div>
             </div>
             <div className="hidden sm:ml-6 sm:flex sm:items-center">
-              <Link
-                className="px-3 py-2 rounded-md text-sm font-medium text-gray-500 hover:text-gray-700"
-                href="/signin"
-              >
-                Login
-              </Link>
+              {session && (
+                <div className="flex">
+                  <p className="px-3 py-2 rounded-md text-sm font-medium text-gray-500 hover:text-gray-700 hover:cursor-default">
+                    Welcome, {session.user?.name}
+                  </p>
+                  <button
+                    onClick={() => signOut()}
+                    className="px-3 py-2 rounded-md text-sm font-medium text-gray-500 hover:text-gray-700"
+                  >
+                    Sign Out
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -51,6 +60,4 @@ const Layout = ({ children }) => {
       </main>
     </div>
   );
-};
-
-export default Layout;
+}

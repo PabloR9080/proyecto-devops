@@ -5,7 +5,7 @@ import Link from "next/link";
 import { signIn } from "next-auth/react";
 
 const registerContent = {
-  linkUrl: "/signin",
+  linkUrl: "/login",
   linkText: "Already have an account?",
   header: "Create a new Account",
   subheader: "Just a few things to get started",
@@ -33,7 +33,7 @@ const AuthForm = ({ mode }: { mode: "register" | "signin" }) => {
 
     try {
       if (mode === "register") {
-        const res = await fetch("/api/register/register", {
+        const res = await fetch("/api/register", {
           method: "POST",
           body: JSON.stringify({
             email: formState.email,
@@ -45,7 +45,7 @@ const AuthForm = ({ mode }: { mode: "register" | "signin" }) => {
           },
         });
         if (res.ok) {
-          router.push("/signin");
+          router.push("/login");
         }
       } else {
         const response = await signIn("credentials", {
@@ -58,6 +58,7 @@ const AuthForm = ({ mode }: { mode: "register" | "signin" }) => {
           router.push("/");
         }
       }
+      setDisplayError(false);
     } catch (e) {
       setError(`Could not ${mode}`);
     } finally {
@@ -148,13 +149,19 @@ const AuthForm = ({ mode }: { mode: "register" | "signin" }) => {
               </div>
             </div>
 
-            {displayError && (
+            {displayError && mode === "register" ? (
               <div className="flex items-center justify-center">
                 <div className="text-sm text-red-500">
                   That email already exists!
                 </div>
               </div>
-            )}
+            ) : displayError && mode === "signin" ? (
+              <div className="flex items-center justify-center">
+                <div className="text-sm text-red-500">
+                  Invalid email or password!
+                </div>
+              </div>
+            ) : null}
 
             <div className="flex items-center justify-between">
               <div className="text-sm">

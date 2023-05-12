@@ -11,6 +11,9 @@ export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
+  if(req.url == undefined){
+    return ;
+  }
   const { searchParams } = new URL(req.url);
   const name = searchParams.get("name") || "Pablo";
   return new Response(JSON.stringify({ message: `Hello ${name}` }), {

@@ -17,6 +17,60 @@ model User {
   email         String    @unique
   password      String
   createdAt     DateTime  @default(now()) @map(name: "created_at")
-  updatedAt     DateTime  @updatedAt @map(name: "updated_at")
+  lastLoginDate DateTime? @map(name: "last_login_date") @db.Timestamp(0)
+  accounts      Account[]
+
   @@map(name: "users")
+}
+
+model Card {
+  id          String        @id @default(uuid())
+  type        String
+  bankName    String        @map(name: "bank_name")
+  number      String        @unique
+  expiryDate  String        @map(name: "expiry_date")
+  createdAt   DateTime      @default(now()) @map(name: "created_at")
+  updatedAt   DateTime      @updatedAt @map(name: "updated_at")
+  Account     Account?      @relation(fields: [accountId], references: [id])
+  accountId   String?       @map(name: "account_id")
+  Transaction Transaction[]
+
+  @@map(name: "cards")
+}
+
+model Account {
+  id            String    @id @default(uuid())
+  name          String
+  balance       Decimal
+  createDate    DateTime  @default(now()) @map(name: "create_date")
+  lastLoginDate DateTime? @map(name: "last_login_date") @db.Timestamp(0)
+  cards         Card[]
+  User          User?     @relation(fields: [userId], references: [id])
+  userId        String?
+
+  @@map(name: "accounts")
+}
+
+model Budget {
+  id          String    @id @default(uuid())
+  name        String
+  description String?
+  amount      Decimal
+  amountLeft  Decimal?  @map(name: "amount_left")
+  startDate   DateTime  @map(name: "start_date")
+  endDate     DateTime? @map(name: "end_date")
+  createdAt   DateTime  @default(now()) @map(name: "created_at")
+  updatedAt   DateTime  @updatedAt @map(name: "updated_at")
+
+  @@map(name: "budgets")
+}
+
+model Transaction {
+  id          String  @id @default(uuid())
+  type        String
+  amount      Decimal
+  description String?
+  Card        Card?   @relation(fields: [cardOrigin], references: [id])
+  cardOrigin  String? @map(name: "card_origin")
+  transactionDate DateTime @default(now()) @map(name: "transaction_date")
 }

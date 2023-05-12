@@ -1,9 +1,8 @@
-
-export default interface User{
-    id: number,
-    name: string,
-    email: string,
-    password: string,
-    lastLoginDate: string,
-    createdDate: string
+export default interface User {
+  id: string;
+  name: string;
+  email: string;
+  password: string;
+  lastLoginDate: string;
+  createdDate: string;
 }
