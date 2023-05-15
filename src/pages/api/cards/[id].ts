@@ -1,6 +1,8 @@
 import { db } from "../../../lib/db";
 import { NextApiRequest, NextApiResponse } from "next";
+import { log } from "../../../utils/logger";
 
+const ENDPOINT = "card";
 // Get Card by Id, Edit Card, Delete Card
 export default async function handler(
   req: NextApiRequest,
@@ -10,6 +12,7 @@ export default async function handler(
   const { id } = req.query;
 
   if (!id) {
+    log.warn(`ID is required in ${ENDPOINT} resource`)
     return res.status(400).json({ message: "ID required" });
   }
 
@@ -17,14 +20,17 @@ export default async function handler(
     // Get card by id
     case "GET":
       try {
+
         const card = await db.card.findUnique({ where: { id: id as string } });
 
         if (!card) {
+          log.warn(`[${method}}] ${ENDPOINT} resource with ${id} not found`);
           res.status(404).json({ message: "Card not found" });
         }
-
+        log.debug(`[${method}}] ${ENDPOINT} resource with ${id} found`)
         res.status(200).json(card);
       } catch (error) {
+        log.error(`[${method}] an error ocurred in resource ${ENDPOINT}`)
         res.status(500).json({ message: "Error retrieving card" });
       }
       break;
@@ -36,6 +42,8 @@ export default async function handler(
         where: { id: id as string },
         data: { type, bankName, number, expiryDate },
       });
+      log.debug(`[${method}] ${ENDPOINT} resource with ${id} updated`);
+      log.debug(updatedCard)
       res.json(updatedCard);
       break;
     // Delete card
@@ -44,15 +52,20 @@ export default async function handler(
         const card = await db.card.delete({ where: { id: id as string } });
 
         if (card) {
+          log.debug(`[${method}] ${ENDPOINT} resource with ${id} deleted`);
+          //añadir mensaje de delete
           res.status(204).end();
         } else {
+          log.warn(`[${method}] ${ENDPOINT} resource with ${id} NOT found`),
           res.status(404).json({ message: "Card not found" });
         }
       } else {
+        log.debug(`[${method}] no id in ${ENDPOINT} resource defined`);
         res.status(400).json({ message: "ID required" });
       }
       break;
     default:
+      log.warn(`method not allowed in ${ENDPOINT} resource`);
       res.status(405).json({ message: "Method not allowed" });
   }
 }

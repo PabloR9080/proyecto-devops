@@ -21,9 +21,10 @@
   },
   "include": [
     "src/**/*"
-, "babel.config.js"  ],
+, "babel.config.js", ],
   "exclude": [
     "node_modules",
     "**/*.spec.ts"
-  ]
+  ],
+  "baseUrl": ".",
 }
