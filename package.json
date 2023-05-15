@@ -1,8 +1,8 @@
 {
     "scripts": {
-        "build": "NODE_OPTIONS='-r next-logger' next build",
-        "dev": "NODE_OPTIONS='-r next-logger' next dev -p 3000 -H 0.0.0.0",
-        "start": "NODE_OPTIONS='-r next-logger' next start",
+        "build": "next build",
+        "dev": "next dev -p 3000 -H 0.0.0.0",
+        "start": "next start",
         "lint": "next lint",
         "test": "jest",
         "type-check": "tsc --noEmit",
