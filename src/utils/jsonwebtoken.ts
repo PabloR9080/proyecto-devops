@@ -1,6 +1,3 @@
-import { readFile } from "fs/promises";
-import { join } from "path";
-import "dotenv/config";
 import * as jwt from "jsonwebtoken";
 
 class DecoderJwt {
@@ -10,9 +7,7 @@ class DecoderJwt {
     try {
       const privatekey = (process.env.NEXT_PUBLIC_TOKEN_SECRET) ? process.env.NEXT_PUBLIC_TOKEN_SECRET : "c09f26e402f90a832bd3ff9d42710a4da095a2ce285b009f0c3730cd9b8e1af3eb84df6611"
 
-      const decode = jwt.verify(token, privatekey, {
-        algorithms: ["RS256"],
-      }) as I;
+      const decode = jwt.verify(token, privatekey) as I;
       return decode;
     } catch (error) {
       console.error(error);
@@ -26,10 +21,7 @@ class DecoderJwt {
   ): Promise<string> {
     const privatekey = (process.env.NEXT_PUBLIC_TOKEN_SECRET) ? process.env.NEXT_PUBLIC_TOKEN_SECRET : "c09f26e402f90a832bd3ff9d42710a4da095a2ce285b009f0c3730cd9b8e1af3eb84df6611"
 
-    return jwt.sign(payload, privatekey, {
-      expiresIn: `${time}`,
-      algorithm: "RS256",
-    });
+    return jwt.sign(payload, privatekey, {expiresIn: `${time}`});
   }
 }
 
