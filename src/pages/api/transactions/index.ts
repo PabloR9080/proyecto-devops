@@ -1,10 +1,16 @@
 import { db } from "../../../lib/db";
 import { NextApiRequest, NextApiResponse } from "next";
+import NextCors from "nextjs-cors";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  await NextCors(req, res, {
+    methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
+    origin: "*",
+    optionsSuccessStatus: 200,
+  });
   const { method } = req;
 
   switch (method) {
@@ -20,7 +26,8 @@ export default async function handler(
     // Create transaction
     case "POST":
       try {
-        const { type, amount, description, cardOrigin, transactionDate } = req.body;
+        const { type, amount, description, cardOrigin, transactionDate } =
+          req.body;
 
         const newTransaction = await db.transaction.create({
           data: {
@@ -32,7 +39,7 @@ export default async function handler(
           },
         });
         res.status(201).json(newTransaction);
-      } catch (error){
+      } catch (error) {
         res.status(500).json({ message: "Error creating transactions" });
       }
       break;
