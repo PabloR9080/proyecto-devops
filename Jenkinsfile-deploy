@@ -5,7 +5,7 @@ pipeline{
             steps{
                 script{
                     def fileJob = readFile 'Jenkinsfile-build'
-                    fileJob.run()
+                    evaluate(fileJob)
                 }
             }
         }
