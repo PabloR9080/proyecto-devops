@@ -1,5 +1,9 @@
 pipeline{
     agent {label 'agent1'}
+    params {
+        string(name: 'GIT_BRANCH', defaultValue: 'develop', description: 'Git branch')
+        string(name: 'BUILD_NUMBER', defaultValue: 'NoNumber', description: 'Build number')
+    }
     stages{
         stage('Test'){
             steps{
@@ -13,7 +17,4 @@ pipeline{
             }
         }
     }
-}
-pipeline{
-
 }

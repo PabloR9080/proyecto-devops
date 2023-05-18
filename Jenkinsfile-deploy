@@ -3,10 +3,10 @@ pipeline{
     stages{
         stage('build pipeline'){
             steps{
-                script{
-                    def fileJob = readFile 'Jenkinsfile-build'
-                    evaluate(fileJob)
-                }
+                build job: 'proyecto-devops', parameters: [
+                    string(name: 'GIT_BRANCH', value: "${GIT_BRANCH}"),
+                    string(name: 'BUILD_NUMBER', value: "${BUILD_NUMBER}")
+                ]
             }
         }
         stage('Build image'){
