@@ -3,7 +3,10 @@ pipeline{
     stages{
         stage('build pipeline'){
             steps{
-                build job: 'Jenkinsfile-build'
+                script{
+                    def fileJob = readFile 'Jenkinsfile-build'
+                    fileJob.run()
+                }
             }
         }
         stage('Build image'){
