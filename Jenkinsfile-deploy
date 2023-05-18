@@ -1,6 +1,12 @@
 pipeline{
     agent {label 'agent1'}
     stages{
+        stage('build pipeline'){
+            steps{
+                build job: '/Jenkinsfile-build'
+                waitForBuild 'Jenkinsfile-build'
+            }
+        }
         stage('Build image'){
             steps{
                 sh 'docker stop $(docker ps -a -q)'
@@ -14,4 +20,5 @@ pipeline{
             }
         }
         }
+
     }
