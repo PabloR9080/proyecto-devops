@@ -3,8 +3,8 @@ pipeline{
     stages{
         stage('build pipeline'){
             steps{
-                build job: '/Jenkinsfile-build'
-                waitForBuild 'Jenkinsfile-build'
+                build job: './Jenkinsfile-build'
+                waitForBuild './Jenkinsfile-build'
             }
         }
         stage('Build image'){
