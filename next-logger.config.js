@@ -3,15 +3,15 @@ const pino = require('pino');
 
 const transport = pino.transport({
   targets:[
-    {
-      target: 'pino-pretty',
-      options: {
-        destination: 2,
-        levelFirst: true,
-        translateTime: 'yyyy-mm-dd HH:MM:ss',
-        ignore: 'pid,hostname',
-        messageFormat: '{levelLabel} {msg}',
-    }},
+    // {
+    //   target: 'pino-pretty',
+    //   options: {
+    //     destination: 2,
+    //     levelFirst: true,
+    //     translateTime: 'yyyy-mm-dd HH:MM:ss',
+    //     ignore: 'pid,hostname',
+    //     messageFormat: '{levelLabel} {msg}',
+    // }},
     {
       target: 'pino/file',
       level:"debug",
