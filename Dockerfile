@@ -8,9 +8,7 @@ RUN npm install
 
 COPY . /app/
 
-RUN npx prisma generate 
-
-RUN npm run build || true
+RUN npx prisma generate && npm run build
 
 EXPOSE 3000
 

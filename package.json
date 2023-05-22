@@ -1,6 +1,6 @@
 {
     "scripts": {
-        "build": "CI='' next build",
+        "build": "next build",
         "dev": "next dev -p 3000 -H 0.0.0.0",
         "start": "next start",
         "lint": "next lint",
