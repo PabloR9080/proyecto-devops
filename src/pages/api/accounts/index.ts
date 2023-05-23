@@ -1,6 +1,7 @@
 import { db } from "../../../lib/db";
 import { NextApiRequest, NextApiResponse } from "next";
-import { log } from "../../../utils/logger"; 
+import NextCors from "nextjs-cors";
+import { log } from "../../../utils/logger";
 
 const ENDPOINT = "accounts";
 
@@ -8,6 +9,11 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  await NextCors(req, res, {
+    methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
+    origin: "*",
+    optionsSuccessStatus: 200,
+  });
   const { method } = req;
 
   switch (method) {
@@ -18,7 +24,7 @@ export default async function handler(
         log.debug(`[GET] All accounts on ${ENDPOINT}`);
         res.json(accounts);
       } catch (error) {
-        log.error("[GET ALL ACCOUNTS] An error ocurred")
+        log.error("[GET ALL ACCOUNTS] An error ocurred");
         res.status(500).json({ message: "Error retrieving accounts" });
       }
       break;
@@ -38,14 +44,14 @@ export default async function handler(
           },
         });
         log.debug(`[POST] create a new account`);
-        log.debug(newAccount)
+        log.debug(newAccount);
         res.status(201).json(newAccount);
-      } catch (error){
-          res.status(500).json({ message: "Error creating account" });
+      } catch (error) {
+        res.status(500).json({ message: "Error creating account" });
       }
       break;
     default:
-      log.warn(`Method not allowd on endpoint: ${ENDPOINT}`)
+      log.warn(`Method not allowd on endpoint: ${ENDPOINT}`);
       res.status(405).json({ message: "Method not allowed" });
   }
 }
