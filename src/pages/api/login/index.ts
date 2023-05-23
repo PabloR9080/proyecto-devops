@@ -4,6 +4,7 @@ import bcrypt, { compare } from "bcrypt";
 import { NextApiRequest, NextApiResponse } from "next";
 import { Prisma } from "@prisma/client";
 import tokenManager from "../../../utils/jsonwebtoken";
+import { useSession, signIn, signOut } from "next-auth/react";
 
 export default async function handler(
   req: NextApiRequest,
@@ -30,7 +31,6 @@ export default async function handler(
 
     if (!isPasswordValid) return null;
 
-    console.log("3")
     await db.user.update({
         where: {
             email: req.body.email,
@@ -39,13 +39,25 @@ export default async function handler(
             lastLoginDate: new Date(),
         } as Prisma.UserUpdateInput,
     });
-    console.log("4")
+    /* const response = await signIn("credentials", {
+      redirect: false,
+      email: req.body.email,
+      password: req.body.password,
+      callbackUrl: "/",
+    });
+    const { data: session } = useSession();
+    console.log(session?.user?.id)
+    console.log(response)
+    if (response?.error) {
+      res.status(500).json({ error: "Internal server error singin" });
+    } */
+
     const accessToken = await tokenManager.GenerateToken(
       {
         userName: user.name,
       }
     );
-    console.log("5")
+
     res.status(200).json({
       user: {
         name: user.name,

@@ -13,13 +13,13 @@ export default withAuth({
 // proteger rutas
 export const config = {
   matcher: [
-    "/",
+    /* "/",
     "/api/accounts/:path*",
     "/api/budgets/:path*",
     "/api/cards/:path*",
     "/api/transactions/:path*",
     "/api/users/:path*",
-    "/api/hello",
+    "/api/hello", */
   ],
 };
 // export const config = { matcher: ["/pages/:path"] };
