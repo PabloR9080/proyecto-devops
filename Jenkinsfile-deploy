@@ -1,10 +1,17 @@
 pipeline{
     agent {label 'agent1'}
     stages{
+        stage('build pipeline'){
+            steps{
+                build job: 'proyecto-devops', parameters: [
+                    string(name: 'GIT_BRANCH', value: "${GIT_BRANCH}"),
+                    string(name: 'BUILD_NUMBER', value: "${BUILD_NUMBER}")
+                ]
+            }
+        }
         stage('Build image'){
             steps{
-                sh 'docker stop $(docker ps -a -q)'
-                sh 'docker rm $(docker ps -a -q)'
+                sh 'docker ps -aq | xargs docker stop | xargs docker rm'
                 sh 'docker build -t sicei-$GIT_BRANCH:1.0.0-$BUILD_NUMBER .'
             }
         }
@@ -14,4 +21,5 @@ pipeline{
             }
         }
         }
+
     }
