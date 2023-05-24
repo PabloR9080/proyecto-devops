@@ -2,6 +2,7 @@ import { db } from "../../../lib/db";
 import { NextApiRequest, NextApiResponse } from "next";
 import NextCors from "nextjs-cors";
 import { log } from "../../../utils/logger";
+import tokenManager from "../../../utils/jsonwebtoken";
 
 const ENDPOINT = "accounts";
 
@@ -15,6 +16,19 @@ export default async function handler(
     optionsSuccessStatus: 200,
   });
   const { method } = req;
+
+  const token = req.headers.authorization;
+  console.log(token)
+
+  if (!token) {
+    return res.status(401).json({ message: 'No se proporcionó un token de acceso.' });
+  }
+
+  try {
+    const decode = await tokenManager.DecodeToken(token);
+  } catch (error) {
+    return res.status(401).json({ message: 'Token inválido.' });
+  }
 
   switch (method) {
     // Get all accounts

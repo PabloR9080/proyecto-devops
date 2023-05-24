@@ -2,6 +2,7 @@ import { db } from "../../../lib/db";
 import { NextApiRequest, NextApiResponse } from "next";
 import NextCors from "nextjs-cors";
 import { log } from "../../../utils/logger";
+import tokenManager from "../../../utils/jsonwebtoken";
 
 const ENDPOINT = "accounts";
 // Get Account by Id, Edit Account, Delete Account
@@ -16,6 +17,18 @@ export default async function handler(
   });
   const { method } = req;
   const { id } = req.query;
+
+  const token = req.headers.authorization;
+
+  if (!token) {
+    return res.status(401).json({ message: 'No se proporcionó un token de acceso.' });
+  }
+
+  try {
+    const decode = await tokenManager.DecodeToken(token);
+  } catch (error) {
+    return res.status(401).json({ message: 'Token inválido.' });
+  }
 
   if (!id) {
     log.error("No id specified in endpoint" + ENDPOINT + " call");

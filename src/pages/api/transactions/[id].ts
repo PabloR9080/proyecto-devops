@@ -2,6 +2,7 @@ import { db } from "../../../lib/db";
 import { NextApiRequest, NextApiResponse } from "next";
 import { log } from "../../../utils/logger";
 import NextCors from "nextjs-cors";
+import tokenManager from "../../../utils/jsonwebtoken";
 
 const ENDPOINT = "transaction";
 // Get Transaction by Id, Edit Transaction, Delete Transaction
@@ -16,6 +17,19 @@ export default async function handler(
   });
   const { method } = req;
   const { id } = req.query;
+
+  const token = req.headers.authorization;
+  console.log(token)
+
+  if (!token) {
+    return res.status(401).json({ message: 'No se proporcionó un token de acceso.' });
+  }
+
+  try {
+    const decode = await tokenManager.DecodeToken(token);
+  } catch (error) {
+    return res.status(401).json({ message: 'Token inválido.' });
+  }
 
   if (!id) {
     log.warn(`ID required in resource ${ENDPOINT}`);
