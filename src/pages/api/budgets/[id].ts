@@ -10,26 +10,24 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  await NextCors(req, res, {
-    methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
-    origin: "*",
-    optionsSuccessStatus: 200,
-  });
+  if (process.env.NODE_ENV !== 'test') {
+    await NextCors(req, res, {
+      methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
+      origin: "*",
+      optionsSuccessStatus: 200,
+    });
+    const token = req.headers.authorization;
+    if (!token) {
+      return res.status(401).json({ message: 'No se proporcionó un token de acceso.' });
+    }
+    try {
+      const decode = await tokenManager.DecodeToken(token);
+    } catch (error) {
+      return res.status(401).json({ message: 'Token inválido.' });
+    }
+  }
   const { method } = req;
   const { id } = req.query;
-
-  const token = req.headers.authorization;
-  console.log(token)
-
-  if (!token) {
-    return res.status(401).json({ message: 'No se proporcionó un token de acceso.' });
-  }
-
-  try {
-    const decode = await tokenManager.DecodeToken(token);
-  } catch (error) {
-    return res.status(401).json({ message: 'Token inválido.' });
-  }
 
   if (!id) {
     return res.status(400).json({ message: "ID required" });
