@@ -1,10 +1,28 @@
 import { db } from "../../../lib/db";
+import NextCors from "nextjs-cors";
 import { NextApiRequest, NextApiResponse } from "next";
+import tokenManager from "../../../utils/jsonwebtoken";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  if (process.env.NODE_ENV !== 'test') {
+    await NextCors(req, res, {
+      methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
+      origin: "*",
+      optionsSuccessStatus: 200,
+    });
+    const token = req.headers.authorization;
+    if (!token) {
+      return res.status(401).json({ message: 'No se proporcionó un token de acceso.' });
+    }
+    try {
+      const decode = await tokenManager.DecodeToken(token);
+    } catch (error) {
+      return res.status(401).json({ message: 'Token inválido.' });
+    }
+  }
   const { method } = req;
 
   switch (method) {
