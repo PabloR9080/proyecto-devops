@@ -12,7 +12,7 @@ pipeline{
         stage('Build image'){
             steps{
                 sh 'docker ps -aq | xargs docker stop | xargs docker rm'
-                sh 'docker build -t sicei-$GIT_BRANCH:1.0.0-$BUILD_NUMBER .'
+                sh 'docker build . -t sicei-$GIT_BRANCH:1.0.0-$BUILD_NUMBER'
             }
         }
         stage('Run container'){

@@ -115,7 +115,7 @@ describe("handler", () => {
 
     it("should return 500 if an error occurs", async () => {
       db.card.create.mockRejectedValueOnce(new Error());
-
+      
       await handler(req as NextApiRequest, res as NextApiResponse);
 
       expect(db.card.create).toHaveBeenCalled();
