@@ -12,7 +12,7 @@ RUN export ELASTIC_APM_CONFIG_FILE=./elastic-apm-node.js
 
 RUN npx prisma generate
 
-RUN npm run build | true
+RUN npm run build 
 
 EXPOSE 3000
 
