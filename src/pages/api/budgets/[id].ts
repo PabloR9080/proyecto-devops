@@ -1,6 +1,8 @@
 import { db } from "../../../lib/db";
 import { NextApiRequest, NextApiResponse } from "next";
+import NextCors from "nextjs-cors";
 import { log } from "../../../utils/logger";
+import tokenManager from "../../../utils/jsonwebtoken";
 
 const ENDPOINT = "budget";
 // Get Budget by Id, Edit Budget, Delete Budget
@@ -8,6 +10,22 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  if (process.env.NODE_ENV !== 'test') {
+    await NextCors(req, res, {
+      methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
+      origin: "*",
+      optionsSuccessStatus: 200,
+    });
+    const token = req.headers.authorization;
+    if (!token) {
+      return res.status(401).json({ message: 'No se proporcionó un token de acceso.' });
+    }
+    try {
+      const decode = await tokenManager.DecodeToken(token);
+    } catch (error) {
+      return res.status(401).json({ message: 'Token inválido.' });
+    }
+  }
   const { method } = req;
   const { id } = req.query;
 
@@ -22,15 +40,15 @@ export default async function handler(
         const budget = await db.budget.findUnique({
           where: { id: id as string },
         });
-        
+
         if (!budget) {
-          log.warn(`[${method}] ${ENDPOINT} resource with id ${id} not found`)
+          log.warn(`[${method}] ${ENDPOINT} resource with id ${id} not found`);
           res.status(404).json({ message: "Budget not found" });
         }
-        log.debug(`[${method}] ${ENDPOINT} resource with id ${id} found`)
+        log.debug(`[${method}] ${ENDPOINT} resource with id ${id} found`);
         res.status(200).json(budget);
       } catch (error) {
-        log.error(`[${method}] an error ocurred in resource ${ENDPOINT}`)
+        log.error(`[${method}] an error ocurred in resource ${ENDPOINT}`);
         res.status(500).json({ message: "Error retrieving budget" });
       }
       break;
@@ -43,7 +61,7 @@ export default async function handler(
         data: { name, description, amountLeft, endDate },
       });
       log.debug(`[${method}] ${ENDPOINT} resource with id ${id} updated`);
-      log.debug(updatedBudget)
+      log.debug(updatedBudget);
       res.json(updatedBudget);
       break;
     // Delete budget

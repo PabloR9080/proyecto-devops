@@ -1,6 +1,8 @@
 import { db } from "../../../lib/db";
 import { NextApiRequest, NextApiResponse } from "next";
+import NextCors from "nextjs-cors";
 import { log } from "../../../utils/logger";
+import tokenManager from "../../../utils/jsonwebtoken";
 
 const ENDPOINT = "card";
 // Get Card by Id, Edit Card, Delete Card
@@ -8,11 +10,27 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  if (process.env.NODE_ENV !== 'test') {
+    await NextCors(req, res, {
+      methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
+      origin: "*",
+      optionsSuccessStatus: 200,
+    });
+    const token = req.headers.authorization;
+    if (!token) {
+      return res.status(401).json({ message: 'No se proporcionó un token de acceso.' });
+    }
+    try {
+      const decode = await tokenManager.DecodeToken(token);
+    } catch (error) {
+      return res.status(401).json({ message: 'Token inválido.' });
+    }
+  }
   const { method } = req;
   const { id } = req.query;
 
   if (!id) {
-    log.warn(`ID is required in ${ENDPOINT} resource`)
+    log.warn(`ID is required in ${ENDPOINT} resource`);
     return res.status(400).json({ message: "ID required" });
   }
 
@@ -20,17 +38,16 @@ export default async function handler(
     // Get card by id
     case "GET":
       try {
-
         const card = await db.card.findUnique({ where: { id: id as string } });
 
         if (!card) {
           log.warn(`[${method}}] ${ENDPOINT} resource with ${id} not found`);
           res.status(404).json({ message: "Card not found" });
         }
-        log.debug(`[${method}}] ${ENDPOINT} resource with ${id} found`)
+        log.debug(`[${method}}] ${ENDPOINT} resource with ${id} found`);
         res.status(200).json(card);
       } catch (error) {
-        log.error(`[${method}] an error ocurred in resource ${ENDPOINT}`)
+        log.error(`[${method}] an error ocurred in resource ${ENDPOINT}`);
         res.status(500).json({ message: "Error retrieving card" });
       }
       break;
@@ -43,7 +60,7 @@ export default async function handler(
         data: { type, bankName, number, expiryDate },
       });
       log.debug(`[${method}] ${ENDPOINT} resource with ${id} updated`);
-      log.debug(updatedCard)
+      log.debug(updatedCard);
       res.json(updatedCard);
       break;
     // Delete card
@@ -57,7 +74,7 @@ export default async function handler(
           res.status(204).end();
         } else {
           log.warn(`[${method}] ${ENDPOINT} resource with ${id} NOT found`),
-          res.status(404).json({ message: "Card not found" });
+            res.status(404).json({ message: "Card not found" });
         }
       } else {
         log.debug(`[${method}] no id in ${ENDPOINT} resource defined`);
