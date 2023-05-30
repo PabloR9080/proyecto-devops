@@ -17,8 +17,7 @@ export default async function handler(
   });
   const { method } = req;
 
-  const token = req.headers.authorization;
-  console.log(token)
+  const token = req.headers.authorization?.split(' ')[1];
 
   if (!token) {
     return res.status(401).json({ message: 'No se proporcionó un token de acceso.' });
@@ -26,6 +25,9 @@ export default async function handler(
 
   try {
     const decode = await tokenManager.DecodeToken(token);
+    if(!decode){
+      return res.status(401).json({ message: 'Token inválido.' });
+    }
   } catch (error) {
     return res.status(401).json({ message: 'Token inválido.' });
   }
