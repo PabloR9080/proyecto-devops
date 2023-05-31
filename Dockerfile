@@ -8,9 +8,11 @@ RUN npm install
 
 COPY . /app/
 
-RUN npx prisma generate 
+RUN export ELASTIC_APM_CONFIG_FILE=./elastic-apm-node.js
 
-RUN npm run build || true
+RUN npx prisma generate
+
+RUN npm run build 
 
 EXPOSE 3000
 
